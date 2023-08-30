@@ -35,16 +35,16 @@ CREATE TABLE photos (
 
 -- load csv files into postgres database
 COPY questions
-From '../csvData/questions.csv'
+From '/Users/lizhang/hack-reactor/Questions-API/csvData/questions.csv'
 DELIMITER ','
 CSV HEADER;
 
 COPY answers
-From '../csvData/answers.csv'
+From '/Users/lizhang/hack-reactor/Questions-API/csvData/answers.csv'
 DELIMITER ','
 CSV HEADER;
 
 COPY photos
-From '../csvData/answers_photos.csv'
+From '/Users/lizhang/hack-reactor/Questions-API/csvData/answers_photos.csv'
 DELIMITER ','
 CSV HEADER;
