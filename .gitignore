@@ -2,3 +2,4 @@ csvData/
 .env
 node_modules/
 .dockerignor
+result.json
