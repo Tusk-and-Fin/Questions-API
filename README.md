@@ -1,51 +1,64 @@
-# Setup:
+# System Design for Questions And Answers Service
 
-1. git checkout main
+Table of Contents
+- [Description](#description)
+- [Author](#author)
+- [Built With](#built-with)
+- [Project Overview & Demos](#project-overview--demos)
 
-   git pull origin
+ ## Description
+To revamp the existing Questions and Answers service on the e-commerce platform, enhancing its capabilities, scalability, and efficiency.
 
-   (make regular updates to keep local copy up to date).
-  (After that you can also merge the changes from your local main branch into the feature branch:
-  git checkout feature/xxx to make sure or switch to the feature branch
-  git merge main  this will merge the changes from the local main branch into the currently checked-out feature branch.)
+## Authors
 
-3. git checkout -b feature/XXX
-to create a "feature" branch to keep it away from the main branch, which keeps the work isolated and organized.
+- [**Eric Chang**](https://github.com/ESC8504)
 
-4. Coding, update, commit
+## Built With
 
-5. git push -u origin feature/XXX
 
-This pushes new-feature to the central repo, and the -u flag adds it as a remote tracking branch. After setting up the tracking branch, git push can be invoked without any parameters to automatically push the new-feature branch to the central repository.
+- ![](https://img.shields.io/badge/-JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
+- ![](https://img.shields.io/badge/-Node.js-339933?style=flat-square&logo=node.js&logoColor=white)
+- ![](https://img.shields.io/badge/-Express-black?style=flat-square&logo=express&logoColor=white)
+- ![](https://img.shields.io/badge/-Amazon_AWS-232F3E?style=flat-square&logo=amazon-aws&logoColor=white)
+- ![](https://img.shields.io/badge/-Git-F05032?style=flat-square&logo=git&logoColor=white)
+- ![](https://img.shields.io/badge/-ESLint-4B32C3?style=flat-square&logo=eslint&logoColor=white)
+- ![](https://img.shields.io/badge/-PostgreSQL-336791?style=flat-square&logo=postgresql&logoColor=white)
+- ![](https://img.shields.io/badge/-NGINX-009639?style=flat-square&logo=nginx&logoColor=white)
+- ![](https://img.shields.io/badge/-Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
 
-# Request a new branch and pull request :
-1. git checkout -b eric-feature main
 
-This checks out a branch called eric-feature based on main, and the -b flag tells Git to create the branch if it doesn’t already exist.
 
-2. coding, commit, update
+## Project Overview & Demos
 
-3. git push -u origin eric-feature
+In this project, I replaced the existing API with a backend system that can support the project's full data set and scale to meet the demands of production traffic. I ensured that the backend system was optimized for scalability to guarantee reliable performance, even during high-traffic periods. It was essential to ensure that our system not only supported the current user base but was also future-proofed to anticipate and accommodate significant user growth. The e-commerce platform is now better equipped to handle user queries efficiently, even as the platform's user base expands exponentially.
 
-This pushes eric-feature to the central repository (origin), and the -u flag adds it as a remote tracking branch.
+### Random product_id GET Questions and GET answers
 
-4. Create a Pull Request
+Scaled to 1000 requests per second for random sampling and bias selection for records within the last 10% of the dataset, which contains 100,000 records.
+The average response time is less than 3ms, and the error rate is 0%.
+Optimizations: PostgreSQL indexing, load balancer with 4 AWS EC2 servers running
+   qa/questions?product_id=%{*:900000-1000000} || 1000 requests per second || 1ms 0% error rate
+   ![Random GET Questions Sample](./assets/getQuestions_1000.png){:height="200px" width="400px"}
+   qa/questions/%{*:900000-1000000}/answers || 1000 requests per second || 3ms 0% error rate
+   ![Random GET Answers Sample](./assets/getAnswers_1000.png){:height="200px" width="400px"}
 
-5. git checkout main
+### Random questions_id POST Questions and POST answers
 
-   git pull
+Scaled to 1000 requests per second for random sampling and bias selection for records within the last 10% of the dataset, which contains 100,000 records.
+The average response time is less than 6ms, and the error rate is 0%.
+Optimizations: PostgreSQL indexing, load balancer with 4 AWS EC2 servers running
+   qa/questions || 1000 requests per second || 6ms 0% error rate
+   ![Random POST Questions Sample](./assets/postQuestions_1000.png){:height="200px" width="400px"}
+   qa/questions/%{*:1-100000}/answers || 1000 requests per second || 6ms 0% error rate
+   ![Random POST Answers Sample](./assets/postAnswers_1000.png){:height="200px" width="400px"}
 
-   git pull origin eric-feature
+### Repeating product_id GET
 
-   git push
+Scaled to 10k requests per second for records within the newest 100 product_id in the dataset.
+The average response time is less than 3ms, and the error rate is 0%.
+Optimizations: PostgreSQL indexing, load balancer with 4 AWS EC2 servers running, NGINX Content Caching.
+   qa/questions?product_id=%{*:999900-1000000}
+   ![Repeating GET Questions Sample](./assets/getQuestions_10000.png){:height="200px" width="400px"}
 
-If the team member wanted, they could pull eric-feature into their local repository and work on it on his own. Any commits he added would also show up in the pull request.
-This process will results in a merge commit. Once the team member is ready to accept the pull request, they needs to merge the feature into the stable project (this can be done by any one on the team)
 
-   They can also do:
 
-   git fetch origin
-
-   git checkout eric-feature
-
-6. ***Review and Merge: Before every merge, at least one group member other than the one who made the pull request should review the pull request, possibly requesting changes. Once approved, the changes can be merged into the main branch of the organization repository.
