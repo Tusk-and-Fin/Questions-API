@@ -1,11 +1,14 @@
 FROM node:16
 
-WORKDIR /project
+WORKDIR /usr/src/app
 
 COPY package*.json ./
 
 RUN npm install
-
+COPY .env .env
 COPY . .
+
+
+EXPOSE 3000
 
 CMD [ "npm", "start" ]

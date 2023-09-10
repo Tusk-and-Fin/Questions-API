@@ -6,13 +6,13 @@ const router = require('./router.js');
 dotenv.config();
 
 const app = express();
-const { PORT, LOADERIO, HOST } = process.env;
+const { PORT, LOADERIO } = process.env;
 
 app.use(express.json());
 app.use(morgan('dev'));
 app.use('/', router);
 app.get('/', (req, res) => {
-  res.send('123456');
+  res.send('working);
 });
 app.get(`/${LOADERIO}/`, (req, res) => {
   res.send(`${LOADERIO}`);
